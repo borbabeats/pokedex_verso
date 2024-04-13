@@ -8,7 +8,7 @@ function Grid() {
     const [pokemonLista, setPokemonLista] = useState([]);
     const [paginaAtual, setPaginaAtual] = useState(1)
     const [totalPokemon, setTotalPokemon] = useState(0)
-    const limit = 20
+    const limit = 18
    
 
     //lista todos os pokemons
@@ -20,7 +20,6 @@ function Grid() {
                 const pokemonDataList = response.data.results;
                 const total = response.data.count
                 setPokemonLista(pokemonDataList);
-                
                 setTotalPokemon(total)
             } catch (error) {
                 console.error('Error fetching Pokemon list:', error);
@@ -34,26 +33,36 @@ function Grid() {
     useEffect(() => {
         async function buscaTodosDetalhesPokemon() {
             try {
-                const promises = pokemonLista.map(async pokemon => buscaPokemon(pokemon.name));
-                const pokemonDetails = await Promise.all(promises);
-                console.log('Lista pokemon: ', pokemonDetails)
-                // Update state based on previous state value
-                setPokemonLista(prevPokemonList => {
-                    return prevPokemonList.map((pokemon, index) => ({
-                        ...pokemon,
-                        ...pokemonDetails[index]
-                    }));
-                });
+                const pokemonDetails = [];
+                for (const pokemon of pokemonLista) {
+                    const details = await buscaPokemon(pokemon.name);
+                    pokemonDetails.push(details);
+                }
+    
+                const updatedPokemonList = pokemonLista.map((pokemon, index) => ({
+                    ...pokemon,
+                    ...pokemonDetails[index]
+                }));
+    
+                // Update state only if there's a change in details
+                if (!isEqual(updatedPokemonList, pokemonLista)) {
+                    setPokemonLista(updatedPokemonList);
+                }
+                
             } catch (error) {
                 console.error('Error fetching Pokemon details:', error);
             }
         }
-        if (pokemonLista.length > 0) {
-            buscaTodosDetalhesPokemon();
-        }
-       
-    }, []);
     
+        // Run only if pokemonLista changes
+        buscaTodosDetalhesPokemon();
+    }, [pokemonLista]); // Depend on pokemonLista
+    
+    // Util function to compare objects deeply
+    function isEqual(obj1, obj2) {
+        return JSON.stringify(obj1) === JSON.stringify(obj2);
+    }
+
 
     //faz a busca por nome
     async function buscaPokemon(name) {
