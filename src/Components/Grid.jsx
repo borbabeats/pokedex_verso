@@ -1,54 +1,59 @@
 import { useEffect, useState } from 'react';
 import api from '../Services/Api';
 import PokeCard from '../Components/Card';
+import { Container, Row, Col, Pagination, PaginationItem, PaginationLink } from 'reactstrap'
 
 
 function Grid() {
-    const [pokemonList, setPokemonList] = useState([]);
-
+    const [pokemonLista, setPokemonLista] = useState([]);
+    const [paginaAtual, setPaginaAtual] = useState(1)
+    const [totalPokemon, setTotalPokemon] = useState(0)
+    const limit = 20
+   
 
     //lista todos os pokemons
     useEffect(() => {
-        async function fetchPokemonList() {
+        async function buscaPokemonLista() {
             try {
-                const response = await api.get('/pokemon');
+                const offset = (paginaAtual -1) * limit
+                const response = await api.get(`/pokemon?limit=${limit}&offset=${offset}`);
                 const pokemonDataList = response.data.results;
+                const total = response.data.count
+                setPokemonLista(pokemonDataList);
                 
-                setPokemonList(pokemonDataList);
+                setTotalPokemon(total)
             } catch (error) {
                 console.error('Error fetching Pokemon list:', error);
             }
         }
-        fetchPokemonList();
-    }, []);
+        buscaPokemonLista();
+    }, [paginaAtual]);
 
 
     //pega as informacoes dos pokemons
     useEffect(() => {
-        async function fetchAllPokemonDetails() {
+        async function buscaTodosDetalhesPokemon() {
             try {
-                const promises = pokemonList.map(async pokemon => {
-                    const pokemonData = await buscaPokemon(pokemon.name);
-                    return pokemonData;
-                    
-                });
-                
+                const promises = pokemonLista.map(async pokemon => buscaPokemon(pokemon.name));
                 const pokemonDetails = await Promise.all(promises);
-                const updatedPokemonList = pokemonList.map((pokemon, index) => ({
-                    ...pokemon,
-                    ...pokemonDetails[index]
-                }))
-                setPokemonList(updatedPokemonList);
+                console.log('Lista pokemon: ', pokemonDetails)
+                // Update state based on previous state value
+                setPokemonLista(prevPokemonList => {
+                    return prevPokemonList.map((pokemon, index) => ({
+                        ...pokemon,
+                        ...pokemonDetails[index]
+                    }));
+                });
             } catch (error) {
                 console.error('Error fetching Pokemon details:', error);
             }
         }
-
-        if (pokemonList.length > 0) {
-            fetchAllPokemonDetails();
+        if (pokemonLista.length > 0) {
+            buscaTodosDetalhesPokemon();
         }
+       
     }, []);
-
+    
 
     //faz a busca por nome
     async function buscaPokemon(name) {
@@ -73,20 +78,70 @@ function Grid() {
         }
     }
 
+    function nextPage() {
+        setPaginaAtual(prevPage => prevPage + 1)
+    }
+
+    function prevPage() {
+        setPaginaAtual(prevPage => prevPage -1)
+    }
+
+    function firstPage() {
+        setPaginaAtual(1)
+    }
+
+    function lastPage() {
+        const lastPageNumber = Math.ceil(totalPokemon / limit)
+        setPaginaAtual(lastPageNumber)
+    }
+
     return (
-        <div className='grid-container'>
-            {pokemonList.map((pokemon, index) => (
-                <PokeCard 
-                    key={index}
-                    pokeName={pokemon.name}
-                    pokeId={pokemon.id}
-                    pokeAbility={pokemon.ability}
-                    pokePhoto={pokemon.photo}
-                    pokeType={pokemon.type}
-                    pokeStats={pokemon.stats}
-                />
-            ))}
-        </div>
+        <Container>
+        {[...Array(6)].map((_, rowIndex) => (
+            <Row key={rowIndex}>
+                {[...Array(3)].map((_, colIndex) => {
+                    const pokemonIndex = (rowIndex * 3) + colIndex;
+                    const pokemon = pokemonLista[pokemonIndex];
+                    return (
+                        <Col key={colIndex}>
+                            {pokemon && (
+                                <PokeCard  
+                                    pokeName={pokemon.name}
+                                    pokeId={pokemon.id}
+                                    pokeAbility={pokemon.ability}
+                                    pokePhoto={pokemon.photo}
+                                    pokeType={pokemon.type}
+                                    pokeStats={pokemon.stats}
+                                />
+                            )}
+                        </Col>
+                    );
+                })}
+            </Row>
+        ))}
+        
+        <Pagination>
+            <PaginationItem disabled={paginaAtual === 1}>
+                <PaginationLink onClick={firstPage} href="#">Primeira</PaginationLink>
+            </PaginationItem>
+
+            <PaginationItem disabled={paginaAtual === 1}>
+                <PaginationLink onClick={prevPage} href="#">Página anterior</PaginationLink>
+            </PaginationItem>
+
+            <PaginationItem>
+                <span>{paginaAtual}</span>
+            </PaginationItem>
+            
+            <PaginationItem disabled={paginaAtual * limit >= totalPokemon}>
+                <PaginationLink onClick={nextPage} href="#">Próxima Página</PaginationLink>
+            </PaginationItem>
+
+            <PaginationItem disabled={paginaAtual * limit >= totalPokemon}>
+                <PaginationLink onClick={lastPage} href="#">Última</PaginationLink>
+            </PaginationItem>
+        </Pagination>
+    </Container>
     );
 }
 

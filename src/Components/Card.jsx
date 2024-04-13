@@ -16,6 +16,8 @@ function PokeCard({ pokeName, pokeId, pokeDescription, pokeAbility, pokePhoto, p
                     return 'border border-5 border-success';
                 } else if (type === 'electric') {
                     return 'border border-5 border-warning';
+                } else if (type === 'wind') {
+                    return 'border border-5 border-info';
                 }
                
                 return 'border border-5 border-secondary';
@@ -30,8 +32,10 @@ function PokeCard({ pokeName, pokeId, pokeDescription, pokeAbility, pokePhoto, p
                 return 'border border-5 border-success';
             } else if (pokeType === 'electric') {
                 return 'border border-5 border-warning';
+            }else if (pokeType === 'wind') {
+                return 'border border-5 border-info';
             }
-            // Default class if type is not recognized
+            // Padrao para tipos gerais
             return 'border border-5 border-secondary';
         }
     }
