@@ -1,66 +1,95 @@
-import { Card, CardBody, CardTitle, CardText, CardLink, ListGroup, ListGroupItem } from 'reactstrap';
+import { useState } from 'react';
+import { Card, CardBody, CardTitle, CardText, CardLink, ListGroup, ListGroupItem, Button} from 'reactstrap';
+import pokelogo from '../assets/pokeball-icon.png'
+import pokeloading from '../assets/pokeball-loader.gif'
 import './Card.scss'
+import ModalPokemon from './Modal';
 
 
-function PokeCard({ pokeName, pokeId, pokeDescription, pokeAbility, pokePhoto, pokeType, pokemonStats }) {
 
+function PokeCard({ pokeName, pokeId, pokeDescription, pokeAbility, pokePhoto, pokeType, pokeStats }) {
+    const [modal, setModal] = useState(false)
+
+    const toggle = () => setModal(!modal)
+
+    
     const customClassBorder = () => {
         if (Array.isArray(pokeType)) {
-            
             return pokeType.map(type => {
-                if (type === 'fire') {
-                    return 'border border-5 border-danger';
-                } else if (type === 'water') {
-                    return 'border border-5 border-primary';
-                } else if (type === 'grass') {
-                    return 'border border-5 border-success';
-                } else if (type === 'electric') {
-                    return 'border border-5 border-warning';
-                } else if (type === 'wind') {
-                    return 'border border-5 border-info';
+                switch (type) {
+                    case 'FIRE':
+                        return 'border border-5 border-danger';
+                    case 'WATER':
+                        return 'border border-5 border-primary';
+                    case 'GRASS':
+                        return 'border border-5 border-success';
+                    case 'ELECTRIC':
+                        return 'border border-5 border-warning';
+                    case 'WIND':
+                        return 'border border-5 border-info';
+                    default:
+                        return 'border border-5 border-secondary';
                 }
-               
-                return 'border border-5 border-secondary';
             });
         } else {
-            
-            if (pokeType === 'fire') {
-                return 'border border-5 border-danger';
-            } else if (pokeType === 'water') {
-                return 'border border-5 border-primary';
-            } else if (pokeType === 'grass') {
-                return 'border border-5 border-success';
-            } else if (pokeType === 'electric') {
-                return 'border border-5 border-warning';
-            }else if (pokeType === 'wind') {
-                return 'border border-5 border-info';
+            switch (pokeType) {
+                case 'FIRE':
+                    return 'border border-5 border-danger';
+                case 'WATER':
+                    return 'border border-5 border-primary';
+                case 'GRASS':
+                    return 'border border-5 border-success';
+                case 'ELECTRIC':
+                    return 'border border-5 border-warning';
+                case 'WIND':
+                    return 'border border-5 border-info';
+                default:
+                    return 'border border-5 border-secondary';
             }
-            // Padrao para tipos gerais
-            return 'border border-5 border-secondary';
         }
     }
 
     return (
-        <Card className={customClassBorder()} >
-            <img alt={pokeName} src={pokePhoto} />   {/*image com texto alternativo*/}
-            <CardBody className='cardBackground'>
-                <CardTitle tag='h4' >{pokeId} - {pokeName}</CardTitle>  {/*nome do pokemon e Id*/}
-            </CardBody>
-            <ListGroup className='description' flush>
-                <span>Tipo:</span>   {/*de quais tipos ele eh*/}
-                {Array.isArray(pokeType) ? (
-                    pokeType.map((type, index) => (
-                        <ListGroupItem key={index}>{type}</ListGroupItem>   
-                    ))
-                ) : (
-                    <ListGroupItem>{pokeType}</ListGroupItem>
-                )}
-            </ListGroup>
-            <CardBody>
-                
-            </CardBody>
+        <>
+        <Card className={customClassBorder()} width={'360px'}>
+            {!pokePhoto ? (
+                <img alt='Carregando' src={pokeloading} width='50px' />
+            ) : (
+                <>
+                    <img alt='pokemon logo' src={pokelogo} width='50px' />
+                    <img alt={pokeName} src={pokePhoto} width='100%' />
+                    <CardBody>
+                        <CardTitle tag='h4'>{pokeId} - {pokeName}</CardTitle>
+                    </CardBody>
+                    <ListGroup className='description' flush>
+                        <Button onClick={toggle}>More Info</Button>
+                        {/*{Array.isArray(pokeType) ? (
+                            pokeType.map((type, index) => (
+                                <ListGroupItem key={index}>{type}</ListGroupItem>
+                            ))
+                        ) : (
+                            <ListGroupItem>{pokeType}</ListGroupItem>
+                        )}*/}
+                    </ListGroup>
+                </>
+            )}
         </Card>
+
+            <ModalPokemon 
+                toggle={toggle}
+                pokeName={pokeName}
+                isOpen={modal}
+                pokeAbility={pokeAbility}
+                pokeType={pokeType}
+                pokeId={pokeId}
+                pokePhoto={pokePhoto}
+                 />
+       
+
+
+        </>
     );
+
 }
 
 export default PokeCard;

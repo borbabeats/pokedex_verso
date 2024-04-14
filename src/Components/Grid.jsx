@@ -58,7 +58,7 @@ function Grid() {
         buscaTodosDetalhesPokemon();
     }, [pokemonLista]); // Depend on pokemonLista
     
-    // Util function to compare objects deeply
+    // Util function to compare objects deeply Comparar objetos
     function isEqual(obj1, obj2) {
         return JSON.stringify(obj1) === JSON.stringify(obj2);
     }
@@ -75,7 +75,7 @@ function Grid() {
                 id: pokemonData.id,
                 ability: pokemonData.abilities.map(ability => ability.ability.name),
                 photo: pokemonData.sprites.front_default,
-                type: pokemonData.types[0].type.name,
+                type: pokemonData.types[0].type.name.toUpperCase(),
                 stats: pokemonData.stats.map(stat => ({
                     name: stat.stat.name,
                     base_stat: stat.base_stat
@@ -88,11 +88,11 @@ function Grid() {
     }
 
     function nextPage() {
-        setPaginaAtual(prevPage => prevPage + 1)
+        setPaginaAtual(atual => atual + 1)
     }
 
     function prevPage() {
-        setPaginaAtual(prevPage => prevPage -1)
+        setPaginaAtual(atual => atual -1)
     }
 
     function firstPage() {
@@ -107,7 +107,7 @@ function Grid() {
     return (
         <Container>
         {[...Array(6)].map((_, rowIndex) => (
-            <Row key={rowIndex}>
+            <Row key={rowIndex} className='mb-3'>
                 {[...Array(3)].map((_, colIndex) => {
                     const pokemonIndex = (rowIndex * 3) + colIndex;
                     const pokemon = pokemonLista[pokemonIndex];
