@@ -1,15 +1,17 @@
+import { Badge } from 'reactstrap'
+
 function Ability(pokeAbility) {
 
 
     return ( 
-    <>
-    <span><p></p></span>
-        <ul>
+    <div className='d-flex flex-column'>
+        <span className='d-flex flex-row justify-content-center'>Habilidades:</span>
+        <ul  className='d-flex flex-row justify-content-center p-0'>
             {pokeAbility.pokeAbility.map((ability, index) => (
-                <li key={index}>{ability.toUpperCase()}</li>
+                <Badge className='ms-1 bg-dark'  key={index}>{ability.toUpperCase()}</Badge>
             ))}
         </ul>
-    </>
+    </div>
     )
 }
 

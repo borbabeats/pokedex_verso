@@ -1,8 +1,9 @@
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Col } from 'reactstrap';
-import { useState } from 'react';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Col, Container } from 'reactstrap';
+//import { useState } from 'react';
 import Abilities from './AbilitiyList'
+import Stats from './StatsComplete'
 import pokelogo from '../assets/pokeball-icon.png'
-import pokeloading from '../assets/pokeball-loader.gif'
+//import pokeloading from '../assets/pokeball-loader.gif'
 import typebug from '../assets/types/bug.png'
 import typefire from '../assets/types/fire.png'
 import typegrass from '../assets/types/grass.png'
@@ -17,10 +18,14 @@ import typepoison from '../assets/types/poison.svg'
 import typepsychic from '../assets/types/psychic.svg'
 import typerock from '../assets/types/rock.svg'
 import typesteel from '../assets/types/steel.svg'
+import typeelectric from '../assets/types/electric.svg'
+import typefairy from '../assets/types/fairy.svg'
+import typedragon from '../assets/types/dragon.png'
+import typedark from '../assets/types/dark.svg'
 
 
 
-function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId, pokePhoto }) {
+function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId, pokePhoto, pokeStats }) {
     
     const customImageTypes = () => {
         if (Array.isArray(pokeType)) {
@@ -32,6 +37,14 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
                         return <img src={typewater} width='30px' alt={type} />;
                     case 'GRASS':
                         return <img src={typegrass} width='30px' alt={type} />;
+                    case 'ELECTRIC':
+                        return <img src={typeelectric} width='30px' alt={type} />;
+                    case 'FAIRY':
+                        return <img src={typefairy} width='30px' alt={type} />;
+                    case 'DRAGON':
+                        return <img src={typedragon} width='30px' alt={type} />;
+                    case 'DARK':
+                        return <img src={typedark} width='30px' alt={type} />;
                     case 'BUG':
                         return <img src={typebug} width='30px' alt={type} />;
                     case 'FIGHTING':
@@ -59,7 +72,7 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
                 }
             });
         } else {
-            // PAra pokemons com 1 so tipo
+            // Para pokemons com 1 so tipo
             switch (pokeType) {
                 case 'FIRE':
                     return <img src={typefire} width='30px' alt={pokeType} />;
@@ -67,6 +80,10 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
                     return <img src={typewater} width='30px' alt={pokeType} />;
                 case 'GRASS':
                     return <img src={typegrass} width='30px' alt={pokeType} />;
+                case 'ELECTRIC':
+                        return <img src={typeelectric} width='30px' alt={pokeType} />;
+                case 'FAIRY':
+                        return <img src={typefairy} width='30px' alt={pokeType} />;
                 case 'BUG':
                     return <img src={typebug} width='30px' alt={pokeType} />;
                 case 'FIGHTING':
@@ -77,6 +94,10 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
                     return <img src={typeghost} width='30px' alt={pokeType} />;
                 case 'GROUND':
                     return <img src={typeground} width='30px' alt={pokeType} />;
+                case 'DRAGON':
+                    return <img src={typedragon} width='30px' alt={pokeType} />;
+                case 'DARK':
+                    return <img src={typedark} width='30px' alt={pokeType} />;
                 case 'ICE':
                     return <img src={typeice} width='30px' alt={pokeType} />;
                 case 'NORMAL':
@@ -95,6 +116,8 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
         }
     }
 
+
+
     const pokeImage = (pokeId, pokePhoto) => {
         const imageUrl = `/pokemonHD/${pokeId}.png`; // Adjust the path as necessary
         
@@ -108,28 +131,36 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
 
     
     return (
-        <Modal isOpen={isOpen} toggle={toggle} className='bg-danger'>
-        <ModalHeader toggle={toggle} className='d-flex flex-row justify-content-between ' style={{ flexDirection: 'row !important' }}>
+        <Modal isOpen={isOpen} toggle={toggle} className='bg-danger' fullscreen>
+        <ModalHeader toggle={toggle} className='d-flex flex-row justify-content-between '>
             
                 <Col>
                     <h2>{pokeName}</h2>
                 </Col>
-                <Col className='d-flex flex-column'>
+                <Col className='d-flex flex-column '>
                     {customImageTypes()}
-                    {pokeType}
+                    {pokeType + ' '}
                 </Col>
            
             </ModalHeader>
-        <ModalBody className='d-flex flex-row justify-content-between'>
-            <div className='w-50'>
+        <ModalBody className='d-flex flex-column justify-content-between'>
+        <div>               
+            <Abilities
+                pokeAbility={pokeAbility}
+            />
+        </div>
+        <Container className='d-flex flex-column flex-md-row'>
+            <Col xs='12' md='6'>
                 {pokeImage(pokeId, pokePhoto)}
-            </div>
-            <div>
-                
-                <Abilities
-                    pokeAbility={pokeAbility}
+            </Col>
+            <Col xs='12' md='6'>
+                <Stats 
+                    pokeStats={pokeStats}
                 />
-            </div>
+            </Col>
+        </Container>
+            
+            
         </ModalBody>
         <ModalFooter className='d-flex flex-row justify-content-start'>
             <img src={pokelogo} alt='Pokemon Logo' width='50px' />

@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import api from '../Services/Api';
 import PokeCard from '../Components/Card';
-import { Container, Row, Col, Pagination, PaginationItem, PaginationLink } from 'reactstrap'
+import { Container, Row, Col, Pagination, PaginationItem, PaginationLink, Input } from 'reactstrap'
+import pokeloading from '../assets/pokeball-loader.gif'
 
-
-function Grid() {
+function Grid({ buscaPoke }) {
     const [pokemonLista, setPokemonLista] = useState([]);
     const [paginaAtual, setPaginaAtual] = useState(1)
     const [totalPokemon, setTotalPokemon] = useState(0)
     const limit = 18
    
-
+console.log(buscaPoke)
     //lista todos os pokemons
     useEffect(() => {
         async function buscaPokemonLista() {
@@ -69,13 +69,13 @@ function Grid() {
         try {
             const response = await api.get(`/pokemon/${name}`);
             const pokemonData = response.data;
-    
+            console.log(pokemonData.types)
             return {
                 name: pokemonData.name.toUpperCase(),
                 id: pokemonData.id,
                 ability: pokemonData.abilities.map(ability => ability.ability.name),
                 photo: pokemonData.sprites.front_default,
-                type: pokemonData.types[0].type.name.toUpperCase(),
+                type: pokemonData.types.map(type => type.type.name.toUpperCase()),
                 stats: pokemonData.stats.map(stat => ({
                     name: stat.stat.name,
                     base_stat: stat.base_stat
@@ -104,15 +104,27 @@ function Grid() {
         setPaginaAtual(lastPageNumber)
     }
 
+    if (pokemonLista.photo) {
+        return (
+            <div className='text-center'>
+                <img src={pokeloading} alt='Loading' />
+            </div>
+        )
+    }
+
+   
+
     return (
+        
         <Container>
+        
         {[...Array(6)].map((_, rowIndex) => (
             <Row key={rowIndex} className='mb-3'>
                 {[...Array(3)].map((_, colIndex) => {
                     const pokemonIndex = (rowIndex * 3) + colIndex;
                     const pokemon = pokemonLista[pokemonIndex];
                     return (
-                        <Col key={colIndex}>
+                        <Col key={colIndex} className='mb-3'>
                             {pokemon && (
                                 <PokeCard  
                                     pokeName={pokemon.name}
@@ -150,6 +162,8 @@ function Grid() {
                 <PaginationLink onClick={lastPage} href="#">Última</PaginationLink>
             </PaginationItem>
         </Pagination>
+
+        
     </Container>
     );
 }

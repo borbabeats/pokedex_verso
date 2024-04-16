@@ -1,15 +1,17 @@
 //import { useEffect, useState } from 'react';
-
+import {Container} from 'reactstrap'
 import Grid from '../Components/Grid';
 
-function Home() {
+function Home({ buscaPoke }) {
     
-    
+  
 
     return (
-        <div>
-           <Grid />
-        </div>
+        <Container className='py-5'>
+           <Grid
+           buscaPoke={buscaPoke}
+           />
+        </Container>
             
     );
 }
