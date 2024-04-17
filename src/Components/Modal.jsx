@@ -1,4 +1,4 @@
-import { Modal, ModalHeader, ModalBody, ModalFooter, Col, Container } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody,Col, Row, Container } from 'reactstrap';
 //import { useState } from 'react';
 import Abilities from './AbilitiyList'
 import Stats from './StatsComplete'
@@ -22,10 +22,11 @@ import typeelectric from '../assets/types/electric.svg'
 import typefairy from '../assets/types/fairy.svg'
 import typedragon from '../assets/types/dragon.png'
 import typedark from '../assets/types/dark.svg'
+import './Modal.scss'
 
 
 
-function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId, pokePhoto, pokeStats }) {
+function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId, pokePhoto, pokeStats, pokeCharac }) {
     
     const customImageTypes = () => {
         if (Array.isArray(pokeType)) {
@@ -117,7 +118,6 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
     }
 
 
-
     const pokeImage = (pokeId, pokePhoto) => {
         const imageUrl = `/pokemonHD/${pokeId}.png`; // Adjust the path as necessary
         
@@ -131,8 +131,8 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
 
     
     return (
-        <Modal isOpen={isOpen} toggle={toggle} className='bg-danger' fullscreen>
-        <ModalHeader toggle={toggle} className='d-flex flex-row justify-content-between '>
+        <Modal isOpen={isOpen} toggle={toggle} fullscreen>
+        <ModalHeader toggle={toggle} className='d-flex flex-row justify-content-between header'>
             
                 <Col>
                     <h2>{pokeName}</h2>
@@ -143,7 +143,7 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
                 </Col>
            
             </ModalHeader>
-        <ModalBody className='d-flex flex-column justify-content-between'>
+        <ModalBody className='d-flex flex-column justify-content-between body'>
         <div>               
             <Abilities
                 pokeAbility={pokeAbility}
@@ -151,7 +151,11 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
         </div>
         <Container className='d-flex flex-column flex-md-row'>
             <Col xs='12' md='6'>
-                {pokeImage(pokeId, pokePhoto)}
+                <Row>{pokeImage(pokeId, pokePhoto)}</Row>
+                <Row className='bg-light p-2 rounded rounded-3 w-100 poke-comics'>
+                    A Wild {pokeName} appears!...
+                    {pokeCharac}
+                    </Row>
             </Col>
             <Col xs='12' md='6'>
                 <Stats 
@@ -162,9 +166,7 @@ function ModalPokemon({ toggle, isOpen, pokeName, pokeAbility, pokeType, pokeId,
             
             
         </ModalBody>
-        <ModalFooter className='d-flex flex-row justify-content-start'>
-            <img src={pokelogo} alt='Pokemon Logo' width='50px' />
-        </ModalFooter>
+        
     </Modal>
     )
 }

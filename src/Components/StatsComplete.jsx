@@ -1,4 +1,5 @@
 import { Progress } from 'reactstrap';
+import './StatsComplete.scss'
 
 function Stats({ pokeStats }) {
     // Checking if pokeStats is undefined or null
@@ -8,12 +9,12 @@ function Stats({ pokeStats }) {
 
     
     return (
-        <div className=''>
+        <div className='board-stats'>
             <ul className=''>
                 {pokeStats.map((stat, index) => (
                     <>
                     <span>{stat.name}</span>
-                    <Progress bar animated className='my-2' key={index} value={stat.base_stat} max={160}>
+                    <Progress  animated className='my-2' key={index} value={stat.base_stat} max={160}>
                          {stat.base_stat}
                     </Progress>
                     </>))}

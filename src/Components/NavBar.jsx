@@ -22,7 +22,7 @@ function NavBar({ buscaNomeCategoria }) {
         <>
         <Container fluid className='py-5 bg-navbar'>
             <Container>
-            <Col ><img src={Logo} alt='pokedex logo' width='250px'/></Col>
+            <Col className='mb-4'><a href='/'><img src={Logo} alt='pokedex logo' width='250px'/></a></Col>
             <Col >
                 <InputGroup>
                     <Input 

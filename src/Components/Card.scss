@@ -1,12 +1,56 @@
 //Card.scss
 .card {
+    height: 505px;
+    width: 280px;
     border-radius: 20px;
-    .description {
-        background-color: red;
-    }
+    border: 2px solid #1b252f ;
+    background-color: #0a141e;
+    box-shadow: 0 0 0.5em 0.03em #1b252f;
+    opacity: 0.95;
     h4 {
         font-weight: 600;
+        color: #ffffff;
+        line-height: 28px;
     }
+    button {
+        border-color: #14b9ff;
+        background-color: #0094e5;
+        box-shadow: 0 0 0.25em 0.03em #0094e5;
+    }
+    &:hover {
+        transform: scale(1.03);
+        transition: transform .3s ease-in-out;
+    }
+    
+    .img-wrapper {
+        position: relative;
+        z-index: 2;
+    }
+
+
+    .img-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 20%;
+        left: 0%;
+        z-index: -1;
+        width: 212px; 
+        height: 212px;
+        background-image: url('https://sg.portal-pokemon.com/play/resources/pokedex/img/pokemon_bg.png');
+        background-size: cover; 
+        border-radius: inherit; 
+        animation: rotate-anime 3s linear infinite;
+    }
+
+    @keyframes rotate-anime {
+        from {
+            transform: rotate(0);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
 }
 
 

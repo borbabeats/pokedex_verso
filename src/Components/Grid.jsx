@@ -3,6 +3,7 @@ import api from '../Services/Api';
 import PokeCard from '../Components/Card';
 import { Container, Row, Col, Pagination, PaginationItem, PaginationLink, Input } from 'reactstrap'
 import pokeloading from '../assets/pokeball-loader.gif'
+import './Grid.scss'
 
 function Grid({ buscaPoke }) {
     const [pokemonLista, setPokemonLista] = useState([]);
@@ -10,7 +11,38 @@ function Grid({ buscaPoke }) {
     const [totalPokemon, setTotalPokemon] = useState(0)
     const limit = 18
    
-console.log(buscaPoke)
+
+        //faz a busca por nome
+        async function buscaPokemon(name) {
+            try {
+                const response = await api.get(`/pokemon/${name}`);
+                const pokemonData = response.data;
+                
+                //const respCharact = await api.get(`/characteristic/${pokemonData.id}`)
+                //const charact = respCharact.data.descriptions[7].description
+                
+
+                return {
+                    name: pokemonData.name.toUpperCase(),
+                    id: pokemonData.id,
+                    ability: pokemonData.abilities.map(ability => ability.ability.name),
+                    photo: pokemonData.sprites.front_default,
+                    type: pokemonData.types.map(type => type.type.name.toUpperCase()),
+                    stats: pokemonData.stats.map(stat => ({
+                        name: stat.stat.name,
+                        base_stat: stat.base_stat
+                    })),
+                    
+                    //characteristics: charact ? charact : 'Gotcha it!!'
+                    
+                };
+                
+            } catch (error) {
+                console.error('Error fetching Pokemon:', error);
+                return null;
+            }
+        }
+
     //lista todos os pokemons
     useEffect(() => {
         async function buscaPokemonLista() {
@@ -44,7 +76,7 @@ console.log(buscaPoke)
                     ...pokemonDetails[index]
                 }));
     
-                // Update state only if there's a change in details
+                
                 if (!isEqual(updatedPokemonList, pokemonLista)) {
                     setPokemonLista(updatedPokemonList);
                 }
@@ -54,38 +86,34 @@ console.log(buscaPoke)
             }
         }
     
-        // Run only if pokemonLista changes
+      
         buscaTodosDetalhesPokemon();
-    }, [pokemonLista]); // Depend on pokemonLista
+    }, [pokemonLista]); 
     
-    // Util function to compare objects deeply Comparar objetos
+
     function isEqual(obj1, obj2) {
         return JSON.stringify(obj1) === JSON.stringify(obj2);
     }
 
 
-    //faz a busca por nome
-    async function buscaPokemon(name) {
-        try {
-            const response = await api.get(`/pokemon/${name}`);
-            const pokemonData = response.data;
-            console.log(pokemonData.types)
-            return {
-                name: pokemonData.name.toUpperCase(),
-                id: pokemonData.id,
-                ability: pokemonData.abilities.map(ability => ability.ability.name),
-                photo: pokemonData.sprites.front_default,
-                type: pokemonData.types.map(type => type.type.name.toUpperCase()),
-                stats: pokemonData.stats.map(stat => ({
-                    name: stat.stat.name,
-                    base_stat: stat.base_stat
-                }))
-            };
-        } catch (error) {
-            console.error('Error fetching Pokemon:', error);
-            return null;
+    useEffect(() => {
+        async function searchAndSetPokemon() {
+            try {
+                const pokemon = await buscaPokemon(buscaPoke);
+                if (pokemon) {
+                    setPokemonLista([pokemon]);
+                } else {
+                    setPokemonLista([]);
+                }
+            } catch (error) {
+                console.error('Error searching Pokemon:', error);
+            }
         }
-    }
+        searchAndSetPokemon();
+    }, [buscaPoke]);
+
+
+
 
     function nextPage() {
         setPaginaAtual(atual => atual + 1)
@@ -133,6 +161,7 @@ console.log(buscaPoke)
                                     pokePhoto={pokemon.photo}
                                     pokeType={pokemon.type}
                                     pokeStats={pokemon.stats}
+                                    //pokeCharac={pokemon.characteristics}
                                 />
                             )}
                         </Col>
@@ -141,7 +170,7 @@ console.log(buscaPoke)
             </Row>
         ))}
         
-        <Pagination>
+        <Pagination className='pagination-wrapper'>
             <PaginationItem disabled={paginaAtual === 1}>
                 <PaginationLink onClick={firstPage} href="#">Primeira</PaginationLink>
             </PaginationItem>
@@ -150,8 +179,8 @@ console.log(buscaPoke)
                 <PaginationLink onClick={prevPage} href="#">Página anterior</PaginationLink>
             </PaginationItem>
 
-            <PaginationItem>
-                <span>{paginaAtual}</span>
+            <PaginationItem active>
+                <PaginationLink>{paginaAtual}</PaginationLink>
             </PaginationItem>
             
             <PaginationItem disabled={paginaAtual * limit >= totalPokemon}>
