@@ -176,7 +176,7 @@ function Grid({ buscaPoke }) {
             </PaginationItem>
 
             <PaginationItem disabled={paginaAtual === 1}>
-                <PaginationLink onClick={prevPage} href="#">Página anterior</PaginationLink>
+                <PaginationLink onClick={prevPage} href="#">Anterior</PaginationLink>
             </PaginationItem>
 
             <PaginationItem active>
@@ -184,7 +184,7 @@ function Grid({ buscaPoke }) {
             </PaginationItem>
             
             <PaginationItem disabled={paginaAtual * limit >= totalPokemon}>
-                <PaginationLink onClick={nextPage} href="#">Próxima Página</PaginationLink>
+                <PaginationLink onClick={nextPage} href="#">Próxima</PaginationLink>
             </PaginationItem>
 
             <PaginationItem disabled={paginaAtual * limit >= totalPokemon}>

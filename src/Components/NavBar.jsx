@@ -26,7 +26,7 @@ function NavBar({ buscaNomeCategoria }) {
             <Col >
                 <InputGroup>
                     <Input 
-                        placeholder='Procure por nome ou tipo...'
+                        placeholder='Procure pelo nome...'
                         value={buscaPoke}
                         onChange={handleChange}
                          />
