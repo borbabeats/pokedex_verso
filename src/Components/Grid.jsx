@@ -172,11 +172,11 @@ function Grid({ buscaPoke }) {
         
         <Pagination className='pagination-wrapper'>
             <PaginationItem disabled={paginaAtual === 1}>
-                <PaginationLink onClick={firstPage} href="#">Primeira</PaginationLink>
+                <PaginationLink onClick={firstPage} href="#">First</PaginationLink>
             </PaginationItem>
 
             <PaginationItem disabled={paginaAtual === 1}>
-                <PaginationLink onClick={prevPage} href="#">Anterior</PaginationLink>
+                <PaginationLink onClick={prevPage} href="#">Prev</PaginationLink>
             </PaginationItem>
 
             <PaginationItem active>
@@ -184,11 +184,11 @@ function Grid({ buscaPoke }) {
             </PaginationItem>
             
             <PaginationItem disabled={paginaAtual * limit >= totalPokemon}>
-                <PaginationLink onClick={nextPage} href="#">Próxima</PaginationLink>
+                <PaginationLink onClick={nextPage} href="#">Next</PaginationLink>
             </PaginationItem>
 
             <PaginationItem disabled={paginaAtual * limit >= totalPokemon}>
-                <PaginationLink onClick={lastPage} href="#">Última</PaginationLink>
+                <PaginationLink onClick={lastPage} href="#">Last</PaginationLink>
             </PaginationItem>
         </Pagination>
 
