@@ -152,7 +152,10 @@ function Grid({ buscaPoke }) {
                     const pokemonIndex = (rowIndex * 3) + colIndex;
                     const pokemon = pokemonLista[pokemonIndex];
                     return (
-                        <Col key={colIndex} className='mb-3'>
+                        <Col key={colIndex} 
+                        xs={12} md={4} sm={8}
+                        className='mb-3 d-flex d-sm-flex justify-content-center'
+                        >
                             {pokemon && (
                                 <PokeCard  
                                     pokeName={pokemon.name}
